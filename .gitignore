@@ -1,5 +1,6 @@
 *.DS_Store
 *.sw[op]
 *.jsonl
+.ipynb_checkpoints/
 test-trainer/
 github-issues-classifier/
