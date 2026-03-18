@@ -1,0 +1,8 @@
+{
+    "exclude": [
+        "**/*.ipynb"
+    ],
+    "ignore": [
+        "**/*.ipynb"
+    ]
+}
