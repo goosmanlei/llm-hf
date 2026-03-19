@@ -168,9 +168,9 @@ args = TrainingArguments(
     output_dir="codeparrot-ds",
 
     # ── Batch 配置 ──────────────────────────────────────
-    per_device_train_batch_size=128,     # 每卡 batch（H100 NVL 94GB 可轻松承载）
-    per_device_eval_batch_size=128,
-    gradient_accumulation_steps=2,       # 有效 batch = 128 × 2卡 × 2 = 512
+    per_device_train_batch_size=512,     # 每卡 batch：显存仅用17%，从128提升到512填满显存
+    per_device_eval_batch_size=512,
+    gradient_accumulation_steps=1,       # 有效 batch = 512 × 2卡 × 1 = 1024，去掉累积减少开销
 
     # ── 精度配置 ─────────────────────────────────────────
     bf16=True,                           # H100 推荐使用 bf16（比 fp16 更稳定）
