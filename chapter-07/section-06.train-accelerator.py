@@ -59,8 +59,8 @@ from accelerate import Accelerator
 # 训练超参数（根据上方设备推荐表修改这里）
 # ──────────────────────────────────────────────────────────────────────────────
 CONTEXT_LENGTH = 128          # 每个训练样本的 token 长度
-BATCH_SIZE = 256              # 每卡 batch size（1x RTX 5090 32GB 默认配置）
-GRAD_ACCUM_STEPS = 2          # 梯度累积步数；有效 batch = BATCH_SIZE × num_gpus × GRAD_ACCUM_STEPS
+BATCH_SIZE = 128              # 每卡 batch size（256 在 RTX 5090 32GB 会 OOM，降到 128）
+GRAD_ACCUM_STEPS = 4          # 梯度累积步数；有效 batch = BATCH_SIZE × num_gpus × GRAD_ACCUM_STEPS
 NUM_TRAIN_EPOCHS = 1          # 训练轮数（codeparrot-ds 数据量大，1 epoch 约 3.3 万步）
 LEARNING_RATE = 5e-4          # 峰值学习率（AdamW + cosine scheduler）
 WEIGHT_DECAY = 0.1            # L2 正则系数（仅对非 bias/LayerNorm 参数生效）
