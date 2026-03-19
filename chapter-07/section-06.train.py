@@ -43,7 +43,7 @@ login(token=os.environ["HF_TOKEN"])  # 也可通过环境变量 HF_TOKEN 传入�
 # 训练集约 60 万条，验证集约 3000 条。
 # ──────────────────────────────────────────────────────────────────────────────
 ds_train = load_dataset("huggingface-course/codeparrot-ds-train", split="train")
-ds_valid = load_dataset("huggingface-course/codeparrot-ds-valid", split="train")
+ds_valid = load_dataset("huggingface-course/codeparrot-ds-valid", split="validation")
 
 raw_datasets = DatasetDict(
     {
