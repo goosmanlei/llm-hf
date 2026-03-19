@@ -11,7 +11,7 @@
 
 # ──────────────────────────────────────────────────────────────────────────────
 # 依赖安装（首次运行前执行）：
-#   pip install datasets transformers[sentencepiece] accelerate flash-attn
+#   pip install datasets transformers[sentencepiece] accelerate
 # ──────────────────────────────────────────────────────────────────────────────
 
 from collections import defaultdict
@@ -105,9 +105,6 @@ tokenized_datasets = raw_datasets.map(
 #   n_ctx：上下文长度，与 context_length 保持一致
 #   bos/eos_token_id：句子起止符，用于生成时的边界控制
 #
-# H100 NVL 优化：attn_implementation="flash_attention_2"
-#   Flash Attention 2 大幅降低注意力计算的显存占用和时间，
-#   在长序列上速度提升 2-4x，需要 pip install flash-attn。
 # ──────────────────────────────────────────────────────────────────────────────
 config = AutoConfig.from_pretrained(
     "gpt2",
@@ -117,7 +114,8 @@ config = AutoConfig.from_pretrained(
     eos_token_id=tokenizer.eos_token_id,
 )
 
-model = GPT2LMHeadModel(config, attn_implementation="flash_attention_2")
+# GPT-2 模型较小且 context_length=128，Flash Attention 收益可忽略，使用标准注意力
+model = GPT2LMHeadModel(config)
 model_size = sum(t.numel() for t in model.parameters())
 print(f"GPT-2 size: {model_size/1000**2:.1f}M parameters")
 
