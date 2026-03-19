@@ -16,8 +16,9 @@
 ├──────────────────┼────────────┼────────────────────────┼──────────────┤
 │ 2x H100 NVL 94GB │ 512        │ 2  (eff=512×2×2=2048)  │ bf16         │
 │ 1x H100 NVL 94GB │ 512        │ 4  (eff=512×1×4=2048)  │ bf16         │
+│ 1x RTX 5090 32GB │ 256        │ 2  (eff=256×1×2=512)   │ bf16 ★ 默认 │
 │ 1x A100 40GB     │ 128        │ 8  (eff=128×1×8=1024)  │ bf16         │
-│ 2x RTX 4090 24GB │ 32         │ 8  (eff=32×2×8=512)    │ bf16 ★ 默认 │
+│ 2x RTX 4090 24GB │ 32         │ 8  (eff=32×2×8=512)    │ bf16         │
 │ 1x RTX 4090 24GB │ 32         │ 16 (eff=32×1×16=512)   │ bf16/fp16    │
 │ 1x RTX 3090 24GB │ 16         │ 32 (eff=16×1×32=512)   │ fp16         │
 └──────────────────┴────────────┴────────────────────────┴──────────────┘
@@ -58,8 +59,8 @@ from accelerate import Accelerator
 # 训练超参数（根据上方设备推荐表修改这里）
 # ──────────────────────────────────────────────────────────────────────────────
 CONTEXT_LENGTH = 128          # 每个训练样本的 token 长度
-BATCH_SIZE = 32               # 每卡 batch size（2x RTX 4090 24GB 默认配置）
-GRAD_ACCUM_STEPS = 8          # 梯度累积步数；有效 batch = BATCH_SIZE × num_gpus × GRAD_ACCUM_STEPS
+BATCH_SIZE = 256              # 每卡 batch size（1x RTX 5090 32GB 默认配置）
+GRAD_ACCUM_STEPS = 2          # 梯度累积步数；有效 batch = BATCH_SIZE × num_gpus × GRAD_ACCUM_STEPS
 NUM_TRAIN_EPOCHS = 1          # 训练轮数（codeparrot-ds 数据量大，1 epoch 约 3.3 万步）
 LEARNING_RATE = 5e-4          # 峰值学习率（AdamW + cosine scheduler）
 WEIGHT_DECAY = 0.1            # L2 正则系数（仅对非 bias/LayerNorm 参数生效）
@@ -143,7 +144,7 @@ tokenized_datasets = raw_datasets.map(
     batched=True,
     remove_columns=raw_datasets["train"].column_names,
     batch_size=2000,
-    num_proc=28,   # 30 vCPU，留 2 个给 OS 和主进程
+    num_proc=10,   # 12 vCPU，留 2 个给 OS 和主进程
 )
 tokenized_datasets.set_format("torch")   # 将 numpy array 转为 torch.Tensor
 accelerator.print(f"训练集大小：{len(tokenized_datasets['train'])} 条样本")
@@ -166,7 +167,7 @@ train_dataloader = DataLoader(
     batch_size=BATCH_SIZE,
     shuffle=True,
     collate_fn=data_collator,
-    num_workers=8,          # 30 vCPU，每卡分配 4 个 worker（2 卡共 8），预加载足够
+    num_workers=4,          # 12 vCPU 单卡，4 个 worker 预加载足够
     pin_memory=True,        # 锁页内存，加速 CPU→GPU 数据传输
 )
 eval_dataloader = DataLoader(
