@@ -83,7 +83,7 @@ OUTPUT_DIR = "codeparrot-ds-accelerate"  # 本地 checkpoint 保存目录
 #   - 混合精度的自动 cast 和 loss scaling
 #   - 主进程判断（is_main_process）
 # ──────────────────────────────────────────────────────────────────────────────
-accelerator = Accelerator(mixed_precision="bf16")
+accelerator = Accelerator(mixed_precision="bf16", gradient_accumulation_steps=GRAD_ACCUM_STEPS)
 
 # ──────────────────────────────────────────────────────────────────────────────
 # 登录 HuggingFace Hub（用于推送 checkpoint）
