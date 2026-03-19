@@ -143,7 +143,7 @@ tokenized_datasets = raw_datasets.map(
     tokenize,
     batched=True,
     remove_columns=raw_datasets["train"].column_names,
-    batch_size=2000,
+    batch_size=10000,
     num_proc=10,   # 12 vCPU，留 2 个给 OS 和主进程
 )
 tokenized_datasets.set_format("torch")   # 将 numpy array 转为 torch.Tensor
