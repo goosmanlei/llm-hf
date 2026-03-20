@@ -16,10 +16,10 @@
 ├──────────────────┼────────────┼────────────────────────┼──────────────┤
 │ 2x H100 NVL 94GB │ 512        │ 2  (eff=512×2×2=2048)  │ bf16         │
 │ 1x H100 NVL 94GB │ 512        │ 4  (eff=512×1×4=2048)  │ bf16         │
-│ 1x RTX 5090 32GB │ 256        │ 2  (eff=256×1×2=512)   │ bf16 ★ 默认 │
+│ 1x RTX 5090 32GB │ 256        │ 2  (eff=256×1×2=512)   │ bf16         │
 │ 1x A100 40GB     │ 128        │ 8  (eff=128×1×8=1024)  │ bf16         │
 │ 2x RTX 4090 24GB │ 32         │ 8  (eff=32×2×8=512)    │ bf16         │
-│ 1x RTX 4090 24GB │ 32         │ 16 (eff=32×1×16=512)   │ bf16/fp16    │
+│ 1x RTX 4090 24GB │ 32         │ 16 (eff=32×1×16=512)   │ bf16 ★ 默认 │
 │ 1x RTX 3090 24GB │ 16         │ 32 (eff=16×1×32=512)   │ fp16         │
 └──────────────────┴────────────┴────────────────────────┴──────────────┘
 目标有效 batch size ≥ 512，过小会导致梯度噪声大，收敛不稳定。
@@ -59,8 +59,8 @@ from accelerate import Accelerator
 # 训练超参数（根据上方设备推荐表修改这里）
 # ──────────────────────────────────────────────────────────────────────────────
 CONTEXT_LENGTH = 128          # 每个训练样本的 token 长度
-BATCH_SIZE = 128              # 每卡 batch size（256 在 RTX 5090 32GB 会 OOM，降到 128）
-GRAD_ACCUM_STEPS = 4          # 梯度累积步数；有效 batch = BATCH_SIZE × num_gpus × GRAD_ACCUM_STEPS
+BATCH_SIZE = 32               # 每卡 batch size（RTX 4090 24GB）
+GRAD_ACCUM_STEPS = 16         # 梯度累积步数；有效 batch = BATCH_SIZE × num_gpus × GRAD_ACCUM_STEPS = 32×1×16=512
 NUM_TRAIN_EPOCHS = 1          # 训练轮数（codeparrot-ds 数据量大，1 epoch 约 3.3 万步）
 LEARNING_RATE = 5e-4          # 峰值学习率（AdamW + cosine scheduler）
 WEIGHT_DECAY = 0.1            # L2 正则系数（仅对非 bias/LayerNorm 参数生效）
