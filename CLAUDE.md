@@ -44,6 +44,11 @@ jupyter notebook
 jupyter lab
 ```
 
+## Workflow Rules
+
+- **修改后必须展示 diff**：每次修改文件后，用 Python 对比前后版本并以可读格式展示变更内容。对于 `.ipynb` 文件，`git diff` 输出的是原始 JSON，无法直观看出代码变化，必须用 `difflib` 提取 cell 源码后再做对比展示。
+- **commit 后必须 push**：每次执行 `git commit` 后，立即执行 `git push`，无需额外确认。
+
 ## Key Patterns in Notebooks
 
 - Chapter 7 notebooks that push to Hub require `notebook_login()` and git-lfs setup
