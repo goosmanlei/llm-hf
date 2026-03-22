@@ -44,6 +44,12 @@ jupyter notebook
 jupyter lab
 ```
 
+## Communication Language
+
+所有对话使用中文，包括解释、回复和说明。以下内容保留英文：
+- 专业术语（如 attention、tokenizer、fine-tuning、embedding 等）
+- 代码、命令、文件名、变量名、API 名称
+
 ## Workflow Rules
 
 - **修改后必须展示 diff**：每次修改文件后，用 Python 对比前后版本并以可读格式展示变更内容。对于 `.ipynb` 文件，`git diff` 输出的是原始 JSON，无法直观看出代码变化，必须用 `difflib` 提取 cell 源码后再做对比展示。
