@@ -25,6 +25,12 @@ Common extras by chapter:
 - Demos: `python -m pip install gradio`
 - Evaluation tasks: `python -m pip install seqeval sacrebleu rouge_score nltk`
 
+## Collaboration Workflow
+- For requests discussed in chat, the assistant must present a proposed change in unified `diff` format first.
+- The assistant should wait for explicit review/approval before applying direct file modifications.
+- The diff should be minimal and scoped to the requested change.
+- After approval, apply the exact reviewed diff (or call out any necessary adjustments before applying).
+
 ## Coding Style & Naming Conventions
 - Keep notebook names consistent with existing patterns: `section-NN.ipynb` and optional suffixes (`.summary`, `.exercise`, `.from-video-01`).
 - Prefer small, focused cell edits instead of large notebook rewrites.
